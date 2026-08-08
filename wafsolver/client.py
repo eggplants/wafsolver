@@ -12,7 +12,7 @@ from __future__ import annotations
 import json
 from typing import TYPE_CHECKING, Any
 
-from curl_cffi import requests
+from curl_cffi import CurlMime, requests
 
 from . import fingerprint
 from .challenge import select_solver
@@ -146,6 +146,27 @@ class WafSolver:
             "goku_props": dict(goku_props),
         }
 
+    @staticmethod
+    def build_multipart_parts(body: Mapping[str, Any]) -> list[tuple[str, bytes]]:
+        """Split an envelope into the multipart fields ``mp_verify`` expects.
+
+        challenge.js moves the payload out of the JSON and posts it as a
+        separate field, leaving ``solution`` null in the metadata.
+
+        Args:
+            body (Mapping[str, Any]): The envelope to split.
+
+        Returns:
+            list[tuple[str, bytes]]: The ordered ``(name, data)`` fields.
+        """
+        metadata = {k: v for k, v in body.items() if k != "_mode"}
+        solution = metadata["solution"]
+        metadata["solution"] = None
+        return [
+            ("solution_metadata", json.dumps(metadata).encode()),
+            ("solution_data", str(solution).encode()),
+        ]
+
     def submit(self, endpoint: str, envelope: Mapping[str, Any]) -> str:
         """Post a solved envelope and return the token.
 
@@ -166,17 +187,11 @@ class WafSolver:
         url = f"https://{endpoint}/{mode}"
 
         if mode == "mp_verify":
-            # challenge.js moves the payload out of the JSON and posts it as a
-            # separate multipart field, leaving `solution` null in the metadata.
-            solution = body["solution"]
-            metadata = dict(body, solution=None)
-            res = self.session.post(
-                url,
-                files={
-                    "solution_metadata": (None, json.dumps(metadata)),
-                    "solution_data": (None, solution),
-                },
-            )
+            # curl_cffi has no `files=`; multipart goes through CurlMime.
+            multipart = CurlMime()
+            for name, data in self.build_multipart_parts(body):
+                multipart.addpart(name=name, data=data)
+            res = self.session.post(url, multipart=multipart)
         else:
             res = self.session.post(
                 url,

@@ -8,6 +8,7 @@ from typing import Any
 from unittest.mock import Mock, patch
 
 import pytest
+from curl_cffi import CurlMime
 
 from wafsolver import __version__
 from wafsolver.challenge import (
@@ -191,12 +192,15 @@ def test_submit_bandwidth_posts_multipart(solver: tuple[WafSolver, Mock]) -> Non
 
     args, kwargs = session.post.call_args
     assert args[0] == f"https://{ENDPOINT}/mp_verify"
+    # curl_cffi rejects `files=`; the payload must go through CurlMime
+    assert "files" not in kwargs
+    assert isinstance(kwargs["multipart"], CurlMime)
 
-    files = kwargs["files"]
-    assert list(files) == ["solution_metadata", "solution_data"]
-    assert files["solution_data"] == (None, solution)
+    parts = waf.build_multipart_parts(envelope)
+    assert [name for name, _ in parts] == ["solution_metadata", "solution_data"]
+    assert dict(parts)["solution_data"] == solution.encode()
     # the payload is moved out of the JSON, leaving `solution` null behind
-    metadata = json.loads(files["solution_metadata"][1])
+    metadata = json.loads(dict(parts)["solution_metadata"])
     assert metadata["solution"] is None
     assert "_mode" not in metadata
     assert metadata["checksum"] == envelope["checksum"]
