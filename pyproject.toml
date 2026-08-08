@@ -1,0 +1,84 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = [ "hatchling", "uv-dynamic-versioning" ]
+
+[project]
+name = "wafsolver"
+description = "Solve AWS WAF JavaScript challenges without a browser"
+readme = "README.md"
+keywords = [
+  "aws",
+  "aws-waf",
+  "challenge",
+  "proof-of-work",
+  "scraping",
+  "waf",
+]
+license = "MIT"
+authors = [ { name = "eggplants", email = "w10776e8w@yahoo.co.jp" } ]
+requires-python = ">=3.12,<4"
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Internet :: WWW/HTTP",
+  "Typing :: Typed",
+]
+dynamic = [ "version" ]
+dependencies = [
+  "cryptography>=43",
+  "curl-cffi>=0.7",
+]
+urls.Repository = "https://github.com/eggplants/wafsolver"
+
+[dependency-groups]
+dev = [
+  "pymarkdownlnt>=0.9.33",
+  "pyproject-fmt>=2.11.1",
+  "pytest>=9.0.2",
+  "pytest-cov>=7",
+]
+docs = [
+  "pdoc>=16",
+]
+
+[tool.hatch]
+version.source = "uv-dynamic-versioning"
+build.targets.wheel.include = [ "wafsolver" ]
+build.targets.sdist.include = [ "wafsolver" ]
+
+[tool.uv]
+python-downloads = "never"
+default-groups = [
+  "dev",
+  "docs",
+]
+exclude-newer = "P7D"
+preview = true
+
+[tool.ruff]
+format.indent-style = "space"
+format.quote-style = "double"
+lint.select = [
+  "ALL",
+]
+lint.ignore = [
+  "COM812",
+  "D211",   # No blank lines allowed before class docstring
+  "D213",   # Multi-line docstring summary should start at the second line
+]
+lint.per-file-ignores."tests/*.py" = [
+  "D",
+  "S101", # Use of assert detected
+  "S105", # Possible hardcoded password (token fixtures)
+  "S106", # Possible hardcoded password (token fixtures)
+]
+lint.pydocstyle.convention = "google"
+
+[tool.uv-dynamic-versioning]
+vcs = "git"
+style = "semver"
+fallback-version = "0.0.0"

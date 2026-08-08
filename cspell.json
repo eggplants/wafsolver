@@ -1,0 +1,35 @@
+{
+  "language": "en_US",
+  "words": [
+    "aead",
+    "aesgcm",
+    "amzn",
+    "awswaf",
+    "bptc",
+    "charliermarsh",
+    "cooldown",
+    "dklen",
+    "goku",
+    "hashcash",
+    "impersonate",
+    "KHTML",
+    "mise",
+    "pdoc",
+    "peaceiris",
+    "pipefail",
+    "pyproject",
+    "pytest",
+    "randrange",
+    "rgtc",
+    "scrypt",
+    "srgb",
+    "wafsolver",
+    "webgl",
+    "Zoey"
+  ],
+  "ignorePaths": [
+    "uv.lock",
+    "dist/**",
+    "docs/**"
+  ]
+}
