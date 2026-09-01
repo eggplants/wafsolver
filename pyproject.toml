@@ -7,24 +7,32 @@ name = "wafsolver"
 description = "Solve AWS WAF JavaScript challenges without a browser"
 readme = "README.md"
 keywords = [
+  "anti-bot",
   "aws",
   "aws-waf",
+  "bypass",
   "challenge",
+  "curl-cffi",
   "proof-of-work",
   "scraping",
   "waf",
+  "web-scraping",
 ]
 license = "MIT"
 authors = [ { name = "eggplants", email = "w10776e8w@yahoo.co.jp" } ]
 requires-python = ">=3.12,<4"
 classifiers = [
   "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
   "Topic :: Internet :: WWW/HTTP",
+  "Topic :: Security",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Utilities",
   "Typing :: Typed",
 ]
 dynamic = [ "version" ]
@@ -32,6 +40,8 @@ dependencies = [
   "cryptography>=43",
   "curl-cffi>=0.7",
 ]
+urls.Documentation = "https://egpl.dev/wafsolver/"
+urls.Issues = "https://github.com/eggplants/wafsolver/issues"
 urls.Repository = "https://github.com/eggplants/wafsolver"
 
 [dependency-groups]
