@@ -10,7 +10,7 @@
   <https://github.com/eggplants/wafsolver/actions/workflows/ci.yml>
 )
 
-Solve AWS WAF JavaScript challenges without a browser.
+Solve [AWS WAF JavaScript challenges](https://docs.aws.amazon.com/waf/latest/developerguide/waf-captcha-and-challenge.html) without a browser.
 
 _Note: intended for accessing sites you are allowed to access programmatically._
 
